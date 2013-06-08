@@ -1,5 +1,5 @@
 <?php
-/* Copyright (c) 2011 Estel Smith
+/* Copyright (c) 2013 Estel Smith
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,16 +20,14 @@
  * THE SOFTWARE.
  */
 /**
- * @package DCP
- * @subpackage Form
+ * @package dcp-validator
  * @author Estel Smith <estel.smith@gmail.com>
  */
 namespace DCP\Form\Validator;
 
 /**
  * Provides an interface for encapsulating form validation results.
- * @package DCP
- * @subpackage Form
+ * @package dcp-validator
  * @author Estel Smith <estel.smith@gmail.com>
  */
 interface FormValidatorResultInterface
