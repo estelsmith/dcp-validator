@@ -1,0 +1,19 @@
+{
+	"name": "dcp/validator",
+	"type": "library",
+	"description": "Provides form validation functionality.",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Estel Smith",
+			"email": "estel.smith@gmail.com"
+		}
+	],
+	"autoload": {
+		"psr-0": {"DCP\\Form\\": "src/"}
+	},
+	"keywords": [
+		"form",
+		"validation"
+	]
+}
