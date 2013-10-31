@@ -4,32 +4,45 @@ The dcp-validator package provides simple form validation functionality.
 
 Example
 -------
-	use DCP\Form\Validator\FormValidator;
-	use DCP\Form\Validator\FormValidatorResult;
-	use DCP\Form\Field\FormFieldTransformations;
-	use DCP\Form\Field\FormFieldValidators;
-	
-	$form = array(); //Create form
-	
-	$validation_rules = array(
-		array(
-			'field_name' => 'username',
-			'required' => TRUE,
-			'message' => 'Username is required',
-			'onbeforevalidate' => FormFieldTransformations::trim()
-		),
-		array(
-			'field_name' => 'password',
-			'required' => TRUE,
-			'message' => 'Password is required'
-		)
-	);
-	
-	$validator = new FormValidator($form, new FormValidatorResult());
-	$validator->setValidationRules($validation_rules);
-	
-	$result = $validator->validate();
-	
-	if (!$result->hasErrors()) {
-		echo 'The form passed validation';
-	}
+    use DCP\Form\Validation\RuleSet;
+    use DCP\Form\Validation\Rule;
+    use DCP\Form\Validation\Constraints;
+    use DCP\Form\Validation\Filters;
+    use DCP\Form\Validation\Validator;
+
+    $rules = new RuleSet();
+    $rules
+        ->add(
+            (new Rule())
+            ->setFieldName('username')
+            ->setMessage('Username is required')
+            ->addFilter(Filters::trim())
+            ->addFilter(Filters::toLowerCase())
+            ->addConstraint(Constraints::notBlank())
+        )
+        ->add(
+            (new Rule())
+            ->setFieldName('username')
+            ->setMessage('Username must be an email address')
+            ->addConstraint(Constraints::formatEmail())
+        )
+        ->add(
+            (new Rule())
+            ->setFieldName('password')
+            ->setMessage('Password is required')
+            ->addConstraint(Constraints::notBlank())
+        )
+    ;
+
+    $form = array(
+        'username' => 'estel.smith@gmail.com',
+        'password' => 'test123'
+    );
+
+    $validator = new Validator();
+    $validator->setRuleSet($rules);
+    $validator->setForm($form);
+
+    if ($validator->validate()) {
+        echo 'Hooray! The form passed validation!';
+    }
