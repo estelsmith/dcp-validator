@@ -4,6 +4,7 @@ The dcp-validator package provides simple form validation functionality.
 
 Example
 -------
+```php
     use DCP\Form\Validation\RuleSet;
     use DCP\Form\Validation\Rule;
     use DCP\Form\Validation\Constraints;
@@ -43,6 +44,9 @@ Example
     $validator->setRuleSet($rules);
     $validator->setForm($form);
 
-    if ($validator->validate()) {
+    $result = $validator->validate();
+
+    if (!$result->hasErrors()) {
         echo 'Hooray! The form passed validation!';
     }
+```
