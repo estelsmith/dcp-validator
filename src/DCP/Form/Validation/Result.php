@@ -26,44 +26,71 @@
 namespace DCP\Form\Validation;
 
 /**
+ * A base implementation of the form validation results.
+ *
  * @package dcp-validator
  * @author Estel Smith <estel.smith@gmail.com>
  */
-interface ValidatorInterface
+class Result implements ResultInterface
 {
     /**
-     * Retrieve current rule set for the validator.
-     *
-     * @return RuleSetInterface
+     * @var mixed
      */
-    public function getRuleSet();
+    protected $errors = array();
 
     /**
-     * Set current rule set for the validator.
-     *
-     * @param RuleSetInterface $ruleSet
+     * {@inheritdoc}
      */
-    public function setRuleSet(RuleSetInterface $ruleSet);
+    public function addError($error, $field = '_form')
+    {
+        if (!is_string($error)) {
+            throw new Exception\InvalidArgumentException('error must be a string');
+        }
+
+        if (!is_string($field)) {
+            throw new Exception\InvalidArgumentException('field must be a string');
+        }
+
+        $this->errors[$field] = $error;
+    }
 
     /**
-     * Retrieve the form that is used for validation.
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getForm();
+    public function hasErrors()
+    {
+        return count($this->errors) > 0;
+    }
 
     /**
-     * Set the form to be used for validation.
-     *
-     * @param mixed $form
-     * @throws Exception\InvalidArgumentException
+     * {@inheritdoc}
      */
-    public function setForm($form);
+    public function getErrors()
+    {
+        return $this->errors;
+    }
 
     /**
-     * Validate the form and return results of the validation.
-     *
-     * @return ResultInterface
+     * {@inheritdoc}
      */
-    public function validate();
+    public function getError($field = '_form')
+    {
+        if (!is_string($field)) {
+            throw new Exception\InvalidArgumentException('field must be a string');
+        }
+
+        return $this->fieldHasError($field) ? $this->errors[$field] : false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function fieldHasError($field)
+    {
+        if (!is_string($field)) {
+            throw new Exception\InvalidArgumentException('field must be a string');
+        }
+
+        return isset($this->errors[$field]);
+    }
 }

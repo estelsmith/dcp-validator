@@ -1,7 +1,36 @@
 <?php
-
+/* Copyright (c) 2013 Estel Smith
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+/**
+ * @package dcp-validator
+ * @author Estel Smith <estel.smith@gmail.com>
+ */
 namespace DCP\Form\Validation;
 
+/**
+ * Provides a validation rule definition that dictates how the validator should handle form input.
+ *
+ * @package dcp-validator
+ * @author Estel Smith <estel.smith@gmail.com>
+ */
 class Rule implements RuleInterface
 {
     /**
@@ -10,19 +39,14 @@ class Rule implements RuleInterface
     protected $fieldName = '';
 
     /**
-     * @var boolean
-     */
-    protected $required = false;
-
-    /**
      * @var string
      */
-    protected $message = '';
+    protected $message = 'This field failed validation';
 
     /**
      * @var mixed
      */
-    protected $beforeValidate = array();
+    protected $filters = array();
 
     /**
      * @var mixed
@@ -32,21 +56,21 @@ class Rule implements RuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getBeforeValidate()
+    public function getFilters()
     {
-        return $this->beforeValidate;
+        return $this->filters;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addBeforeValidate($beforeValidate)
+    public function addFilter($filter)
     {
-        if (!is_callable($beforeValidate)) {
+        if (!is_callable($filter)) {
             throw new Exception\InvalidArgumentException('beforeValidate must be callable');
         }
 
-        $this->beforeValidate[] = $beforeValidate;
+        $this->filters[] = $filter;
 
         return $this;
     }
@@ -91,28 +115,6 @@ class Rule implements RuleInterface
         }
 
         $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRequired()
-    {
-        return $this->required;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRequired($required = true)
-    {
-        if (!is_bool($required)) {
-            throw new Exception\InvalidArgumentException('message must be a boolean');
-        }
-
-        $this->required = $required;
 
         return $this;
     }
