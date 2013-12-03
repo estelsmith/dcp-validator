@@ -41,7 +41,7 @@ class Constraints
     public static function notBlank()
     {
         return function ($data) {
-            return !isset($data) || ($data !== '');
+            return strlen($data) > 0;
         };
     }
 
@@ -123,7 +123,7 @@ class Constraints
     public static function isBlank()
     {
         return function ($data) {
-            return isset($data) && ($data === '');
+            return strlen($data) === 0;
         };
     }
 
