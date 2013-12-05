@@ -31,4 +31,6 @@ namespace DCP\Form\Validation;
  * @package dcp-validator
  * @author Estel Smith <estel.smith@gmail.com>
  */
-interface Exception {}
+interface Exception
+{
+}

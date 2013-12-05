@@ -33,4 +33,6 @@ use DCP\Form\Validation\Exception;
  * @package dcp-validator
  * @author Estel Smith <estel.smith@gmail.com>
  */
-class DomainException extends \DomainException implements Exception {}
+class DomainException extends \DomainException implements Exception
+{
+}

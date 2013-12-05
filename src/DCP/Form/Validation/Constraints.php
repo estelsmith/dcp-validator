@@ -108,7 +108,7 @@ class Constraints
      */
     public static function formatRegex($regex)
     {
-        return function ($data) use($regex) {
+        return function ($data) use ($regex) {
             if ($data) {
                 return (bool)preg_match($regex, $data);
             }
@@ -135,7 +135,7 @@ class Constraints
      */
     public static function matchesValue($value)
     {
-        return function ($data) use($value) {
+        return function ($data) use ($value) {
             if ($data) {
                 return $data == $value;
             }

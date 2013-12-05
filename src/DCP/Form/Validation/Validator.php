@@ -92,13 +92,13 @@ class Validator implements ValidatorInterface
 
             $data = $this->getFieldData($fieldName);
 
-            foreach($rule->getFilters() as $filter) {
+            foreach ($rule->getFilters() as $filter) {
                 $data = call_user_func_array($filter, array($data));
             }
 
             $this->setFieldData($fieldName, $data);
 
-            foreach($rule->getConstraints() as $constraint) {
+            foreach ($rule->getConstraints() as $constraint) {
                 $constraintResult = call_user_func_array($constraint, array($data));
 
                 if ($constraintResult === false) {
