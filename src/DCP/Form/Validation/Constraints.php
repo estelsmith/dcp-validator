@@ -53,7 +53,7 @@ class Constraints
     public static function formatEmail()
     {
         return function ($data) {
-            if ($data) {
+            if (strlen($data) > 0) {
                 $returnValue = false;
 
                 if (filter_var($data, FILTER_VALIDATE_EMAIL)) {
@@ -73,7 +73,7 @@ class Constraints
     public static function formatDigits()
     {
         return function ($data) {
-            if ($data) {
+            if (strlen($data) > 0) {
                 $returnValue = false;
 
                 if ((is_string($data) || is_numeric($data)) && preg_match('/^[0-9]+$/', $data)) {
@@ -93,7 +93,7 @@ class Constraints
     public static function formatNumeric()
     {
         return function ($data) {
-            if ($data) {
+            if (strlen($data) > 0) {
                 return is_numeric($data);
             }
         };
@@ -109,7 +109,7 @@ class Constraints
     public static function formatRegex($regex)
     {
         return function ($data) use ($regex) {
-            if ($data) {
+            if (strlen($data) > 0) {
                 return (bool)preg_match($regex, $data);
             }
         };
@@ -136,8 +136,8 @@ class Constraints
     public static function matchesValue($value)
     {
         return function ($data) use ($value) {
-            if ($data) {
-                return $data == $value;
+            if (strlen($data) > 0) {
+                return $data === $value;
             }
         };
     }

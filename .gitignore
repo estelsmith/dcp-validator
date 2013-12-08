@@ -4,8 +4,10 @@
 # PHPStorm Files
 .idea
 
-# Composer dependencies
+# Composer
+composer.lock
 vendor/*
+bin/*
 
 # Random test file
 test.php
