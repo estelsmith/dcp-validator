@@ -52,7 +52,7 @@ class Rule implements RuleInterface
     public function addFilter($filter)
     {
         if (!is_callable($filter)) {
-            throw new Exception\InvalidArgumentException('beforeValidate must be callable');
+            throw new Exception\InvalidArgumentException('filter must be callable');
         }
 
         $this->filters[] = $filter;

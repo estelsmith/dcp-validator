@@ -8,4 +8,4 @@ install:
   - composer install
 script:
   - phpcs --standard=psr2 src
-  - bin/phpspec run
+  - bin/phpunit --coverage-text Tests

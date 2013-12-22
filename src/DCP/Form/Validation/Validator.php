@@ -17,10 +17,6 @@ class Validator implements ValidatorInterface
      * @var RuleSetInterface
      */
     protected $ruleSet;
-    /**
-     * @var mixed
-     */
-    protected $form;
 
     /**
      * {@inheritdoc}
@@ -36,32 +32,13 @@ class Validator implements ValidatorInterface
     public function setRuleSet(RuleSetInterface $ruleSet)
     {
         $this->ruleSet = $ruleSet;
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getForm()
-    {
-        return $this->form;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setForm($form)
-    {
-        if (!is_array($form) && !is_object($form)) {
-            throw new Exception\InvalidArgumentException('form must be an array or object');
-        }
-
-        $this->form = $form;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validate($validationGroup = null)
+    public function validate(&$form, $validationGroup = null)
     {
         if ($validationGroup !== null && !is_string($validationGroup)) {
             throw new Exception\InvalidArgumentException('validationGroup must be a string');
@@ -71,29 +48,31 @@ class Validator implements ValidatorInterface
         $rules = $this->getRuleSet();
 
         // Wrap getFieldData in a closure to expose the method to outside uses, since it's protected.
-        $getFieldDataCallback = function ($field) {
-            return $this->getFieldData($field);
+        $getFieldDataCallback = function ($field) use(&$form) {
+            return $this->getFieldData($form, $field);
         };
 
         /** @var RuleInterface $rule */
-        foreach ($rules as $rule) {
-            if ($validationGroup === null || in_array($validationGroup, $rule->getValidationGroups(), true)) {
-                $fieldName = $rule->getFieldName();
+        if ($rules) {
+            foreach ($rules as $rule) {
+                if ($validationGroup === null || in_array($validationGroup, $rule->getValidationGroups(), true)) {
+                    $fieldName = $rule->getFieldName();
 
-                $data = $this->getFieldData($fieldName);
+                    $data = $this->getFieldData($form, $fieldName);
 
-                foreach ($rule->getFilters() as $filter) {
-                    $data = call_user_func_array($filter, array($data, $getFieldDataCallback));
-                }
+                    foreach ($rule->getFilters() as $filter) {
+                        $data = call_user_func_array($filter, array($data, $getFieldDataCallback));
+                    }
 
-                $this->setFieldData($fieldName, $data);
+                    $this->setFieldData($form, $fieldName, $data);
 
-                foreach ($rule->getConstraints() as $constraint) {
-                    $constraintResult = call_user_func_array($constraint, array($data, $getFieldDataCallback));
+                    foreach ($rule->getConstraints() as $constraint) {
+                        $constraintResult = call_user_func_array($constraint, array($data, $getFieldDataCallback));
 
-                    if ($constraintResult === false) {
-                        $result->addError($rule->getMessage(), $fieldName);
-                        break;
+                        if ($constraintResult === false) {
+                            $result->addError($rule->getMessage(), $fieldName);
+                            break;
+                        }
                     }
                 }
             }
@@ -103,14 +82,13 @@ class Validator implements ValidatorInterface
     }
 
     /**
+     * @param mixed $form
      * @param string $fieldName
      * @return mixed|null
      * @throws Exception\DomainException
      */
-    protected function getFieldData($fieldName)
+    protected function getFieldData($form, $fieldName)
     {
-        $form = $this->getForm();
-
         $data = null;
 
         if ($form) {
@@ -133,14 +111,13 @@ class Validator implements ValidatorInterface
     }
 
     /**
+     * @param mixed $form
      * @param string $fieldName
      * @param mixed $data
      * @throws Exception\DomainException
      */
-    protected function setFieldData($fieldName, $data)
+    protected function setFieldData(&$form, $fieldName, $data)
     {
-        $form = $this->getForm();
-
         if ($form) {
             $setter = 'set' . ucfirst($fieldName);
 
@@ -152,7 +129,6 @@ class Validator implements ValidatorInterface
                 call_user_func_array(array($form, $setter), array($data));
             } else {
                 $form[$fieldName] = $data;
-                $this->setForm($form);
             }
         }
     }

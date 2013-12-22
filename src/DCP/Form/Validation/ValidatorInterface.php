@@ -22,30 +22,17 @@ interface ValidatorInterface
      * Set current rule set for the validator.
      *
      * @param RuleSetInterface $ruleSet
+     * @return $this
      */
     public function setRuleSet(RuleSetInterface $ruleSet);
 
     /**
-     * Retrieve the form that is used for validation.
-     *
-     * @return mixed
-     */
-    public function getForm();
-
-    /**
-     * Set the form to be used for validation.
-     *
-     * @param mixed $form
-     * @throws Exception\InvalidArgumentException
-     */
-    public function setForm($form);
-
-    /**
      * Validate the form and return results of the validation.
      *
+     * @param mixed $form
      * @param string $validationGroup
      * @return ResultInterface
      * @throws Exception\InvalidArgumentException
      */
-    public function validate($validationGroup = null);
+    public function validate(&$form, $validationGroup = null);
 }

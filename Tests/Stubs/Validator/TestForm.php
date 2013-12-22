@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Stubs\Validator;
+namespace Tests\Stubs\Validator;
 
 class TestForm
 {

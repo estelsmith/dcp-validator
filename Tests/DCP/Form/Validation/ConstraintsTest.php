@@ -1,23 +1,17 @@
 <?php
 
-namespace spec\DCP\Form\Validation;
+namespace Tests\DCP\Form\Validation;
 
+use DCP\Form\Validation\Constraints;
 use DCP\Form\Validation\FieldReference;
-use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
-class ConstraintsSpec extends ObjectBehavior
+class ConstraintsTest extends \PHPUnit_Framework_TestCase
 {
-    public function it_is_initializable()
+    public function testNotBlank()
     {
-        $this->shouldHaveType('DCP\Form\Validation\Constraints');
-    }
+        $constraint = Constraints::notBlank();
 
-    public function it_validates_not_blank_properly()
-    {
-        $constraint = $this->notBlank();
-
-        $constraint->shouldBeAnInstanceOf('\Closure');
+        $this->assertInstanceOf('\Closure', $constraint);
 
         $tests = [
             [null, false],
@@ -28,15 +22,15 @@ class ConstraintsSpec extends ObjectBehavior
         ];
 
         foreach ($tests as $test) {
-            $constraint($test[0])->shouldReturn($test[1]);
+            $this->assertEquals($test[1], $constraint($test[0]));
         }
     }
 
-    public function it_validates_format_email_properly()
+    public function testFormatEmail()
     {
-        $constraint = $this->formatEmail();
+        $constraint = Constraints::formatEmail();
 
-        $constraint->shouldBeAnInstanceOf('\Closure');
+        $this->assertInstanceOf('\Closure', $constraint);
 
         $tests = [
             [null, null],
@@ -52,15 +46,15 @@ class ConstraintsSpec extends ObjectBehavior
         ];
 
         foreach ($tests as $test) {
-            $constraint($test[0])->shouldReturn($test[1]);
+            $this->assertEquals($test[1], $constraint($test[0]));
         }
     }
 
-    public function it_validates_format_digits_properly()
+    public function testFormatDigits()
     {
-        $constraint = $this->formatDigits();
+        $constraint = Constraints::formatDigits();
 
-        $constraint->shouldBeAnInstanceOf('\Closure');
+        $this->assertInstanceOf('\Closure', $constraint);
 
         $tests = [
             [null, null],
@@ -73,15 +67,15 @@ class ConstraintsSpec extends ObjectBehavior
         ];
 
         foreach ($tests as $test) {
-            $constraint($test[0])->shouldReturn($test[1]);
+            $this->assertEquals($test[1], $constraint($test[0]));
         }
     }
 
-    public function it_validates_format_numeric_properly()
+    public function testFormatNumeric()
     {
-        $constraint = $this->formatNumeric();
+        $constraint = Constraints::formatNumeric();
 
-        $constraint->shouldBeAnInstanceOf('\Closure');
+        $this->assertInstanceOf('\Closure', $constraint);
 
         $tests = [
             [null, null],
@@ -98,15 +92,15 @@ class ConstraintsSpec extends ObjectBehavior
         ];
 
         foreach ($tests as $test) {
-            $constraint($test[0])->shouldReturn($test[1]);
+            $this->assertEquals($test[1], $constraint($test[0]));
         }
     }
 
-    public function it_validates_format_regex_properly()
+    public function testFormatRegex()
     {
-        $constraint = $this->formatRegex('/test/');
+        $constraint = Constraints::formatRegex('/test/');
 
-        $constraint->shouldBeAnInstanceOf('\Closure');
+        $this->assertInstanceOf('\Closure', $constraint);
 
         $tests = [
             [null, null],
@@ -119,15 +113,15 @@ class ConstraintsSpec extends ObjectBehavior
         ];
 
         foreach ($tests as $test) {
-            $constraint($test[0])->shouldReturn($test[1]);
+            $this->assertEquals($test[1], $constraint($test[0]));
         }
     }
 
-    public function it_validates_is_blank_properly()
+    public function testIsBlank()
     {
-        $constraint = $this->isBlank();
+        $constraint = Constraints::isBlank();
 
-        $constraint->shouldBeAnInstanceOf('\Closure');
+        $this->assertInstanceOf('\Closure', $constraint);
 
         $tests = [
             [0, false],
@@ -138,15 +132,15 @@ class ConstraintsSpec extends ObjectBehavior
         ];
 
         foreach ($tests as $test) {
-            $constraint($test[0])->shouldReturn($test[1]);
+            $this->assertEquals($test[1], $constraint($test[0]));
         }
     }
 
-    public function it_validates_must_match_properly()
+    public function testMustMatch()
     {
-        $constraint = $this->mustMatch('test');
+        $constraint = Constraints::mustMatch('test');
 
-        $constraint->shouldBeAnInstanceOf('\Closure');
+        $this->assertInstanceOf('\Closure', $constraint);
 
         $tests = [
             [null, null],
@@ -158,11 +152,11 @@ class ConstraintsSpec extends ObjectBehavior
         ];
 
         foreach ($tests as $test) {
-            $constraint($test[0], '')->shouldReturn($test[1]);
+            $this->assertEquals($test[1], $constraint($test[0], ''));
         }
 
         // See if field references are being utilizes in the constraint.
-        $constraint = $this->mustMatch(new FieldReference('test_reference'));
+        $constraint = Constraints::mustMatch(new FieldReference('test_reference'));
 
         $testForm = [
             'test_reference' => 'test',
@@ -173,7 +167,7 @@ class ConstraintsSpec extends ObjectBehavior
             return $testForm[$field];
         };
 
-        $constraint('test', $callback)->shouldReturn(true);
-        $constraint('nooo', $callback)->shouldReturn(false);
+        $this->assertTrue($constraint('test', $callback));
+        $this->assertFalse($constraint('nooo', $callback));
     }
 }
