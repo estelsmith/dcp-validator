@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/estelsmith/dcp-validator.png?branch=master)](https://travis-ci.org/estelsmith/dcp-validator)
+
 About
 =====
 The dcp-validator package provides simple form validation functionality.
