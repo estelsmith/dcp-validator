@@ -48,7 +48,7 @@ class Validator implements ValidatorInterface
         $rules = $this->getRuleSet();
 
         // Wrap getFieldData in a closure to expose the method to outside uses, since it's protected.
-        $getFieldDataCallback = function ($field) use(&$form) {
+        $getFieldDataCallback = function ($field) use (&$form) {
             return $this->getFieldData($form, $field);
         };
 
