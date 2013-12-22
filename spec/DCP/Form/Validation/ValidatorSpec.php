@@ -296,4 +296,70 @@ class ValidatorSpec extends ObjectBehavior
         $result->getError('goodReference')->shouldBe(false);
         $result->getError('badReference')->shouldBe('bad_reference_error');
     }
+
+    public function it_will_not_validate_when_validation_group_is_not_a_string()
+    {
+        $this->shouldThrow('DCP\Form\Validation\Exception\InvalidArgumentException')->duringValidate(['not a string.']);
+    }
+
+    public function it_will_validate_requested_validation_group()
+    {
+        $form = [
+            'page_1_field_1' => 'page 1 test data',
+            'page_1_field_2' => '',
+            'page_2_field_1' => 'page 2 test data',
+            'page_2_field_2' => ''
+        ];
+
+        $ruleSet = new RuleSet();
+        $ruleSet
+            ->add(
+                (new Rule())
+                    ->setFieldName('page_1_field_1')
+                    ->setMessage('page_1_field_1_error')
+                    ->addConstraint(Constraints::notBlank())
+                    ->addValidationGroup('page_1')
+            )
+            ->add(
+                (new Rule())
+                    ->setFieldName('page_1_field_2')
+                    ->setMessage('page_1_field_2_error')
+                    ->addConstraint(Constraints::notBlank())
+                    ->addValidationGroup('page_1')
+            )
+            ->add(
+                (new Rule())
+                    ->setFieldName('page_2_field_1')
+                    ->setMessage('page_2_field_1_error')
+                    ->addConstraint(Constraints::notBlank())
+                    ->addValidationGroup('page_2')
+            )
+            ->add(
+                (new Rule())
+                    ->setFieldName('page_2_field_2')
+                    ->setMessage('page_2_field_2_error')
+                    ->addConstraint(Constraints::notBlank())
+                    ->addValidationGroup('page_2')
+            )
+        ;
+
+        $this->setRuleSet($ruleSet);
+        $this->setForm($form);
+
+        /** @var ResultInterface $result */
+        $result = $this->validate('page_1');
+
+        $result->getError('page_1_field_1')->shouldBe(false);
+        $result->getError('page_1_field_2')->shouldBe('page_1_field_2_error');
+        $result->getError('page_2_field_1')->shouldBe(false);
+        $result->getError('page_2_field_2')->shouldBe(false);
+
+        /** @var ResultInterface $result */
+        $result = $this->validate('page_2');
+
+        $result->getError('page_1_field_1')->shouldBe(false);
+        $result->getError('page_1_field_2')->shouldBe(false);
+        $result->getError('page_2_field_1')->shouldBe(false);
+        $result->getError('page_2_field_2')->shouldBe('page_2_field_2_error');
+    }
 }

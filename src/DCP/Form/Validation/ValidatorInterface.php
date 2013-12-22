@@ -43,7 +43,9 @@ interface ValidatorInterface
     /**
      * Validate the form and return results of the validation.
      *
+     * @param string $validationGroup
      * @return ResultInterface
+     * @throws Exception\InvalidArgumentException
      */
-    public function validate();
+    public function validate($validationGroup = null);
 }

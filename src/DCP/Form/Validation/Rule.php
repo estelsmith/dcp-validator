@@ -34,6 +34,11 @@ class Rule implements RuleInterface
     protected $constraints = array();
 
     /**
+     * @var mixed
+     */
+    protected $validationGroups = array();
+
+    /**
      * {@inheritdoc}
      */
     public function getFilters()
@@ -100,7 +105,7 @@ class Rule implements RuleInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getConstraints()
     {
@@ -108,9 +113,7 @@ class Rule implements RuleInterface
     }
 
     /**
-     * @param callable $constraint
-     * @return RuleInterface
-     * @throws Exception\InvalidArgumentException
+     * {@inheritdoc}
      */
     public function addConstraint($constraint)
     {
@@ -119,6 +122,28 @@ class Rule implements RuleInterface
         }
 
         $this->constraints[] = $constraint;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getValidationGroups()
+    {
+        return $this->validationGroups;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addValidationGroup($validationGroup)
+    {
+        if (!is_string($validationGroup)) {
+            throw new Exception\InvalidArgumentException('validationGroup must be a string');
+        }
+
+        $this->validationGroups[] = $validationGroup;
 
         return $this;
     }

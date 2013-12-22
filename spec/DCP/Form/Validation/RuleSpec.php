@@ -79,4 +79,22 @@ class RuleSpec extends ObjectBehavior
 
         $this->getConstraints()->shouldBe($filters);
     }
+
+    public function it_cannot_add_validation_group_that_is_not_a_string()
+    {
+        $this->shouldThrow('DCP\Form\Validation\Exception\InvalidArgumentException')->duringAddValidationGroup(['not a string.']);
+    }
+
+    public function it_can_add_and_get_validation_groups()
+    {
+        $validationGroups = [
+            'page_1',
+            'page_2'
+        ];
+
+        $this->addValidationGroup($validationGroups[0]);
+        $this->addValidationGroup($validationGroups[1]);
+
+        $this->getValidationGroups()->shouldBe($validationGroups);
+    }
 }

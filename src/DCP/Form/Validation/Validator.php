@@ -61,8 +61,12 @@ class Validator implements ValidatorInterface
     /**
      * {@inheritdoc}
      */
-    public function validate()
+    public function validate($validationGroup = null)
     {
+        if ($validationGroup !== null && !is_string($validationGroup)) {
+            throw new Exception\InvalidArgumentException('validationGroup must be a string');
+        }
+
         $result = new Result();
         $rules = $this->getRuleSet();
 
@@ -73,22 +77,24 @@ class Validator implements ValidatorInterface
 
         /** @var RuleInterface $rule */
         foreach ($rules as $rule) {
-            $fieldName = $rule->getFieldName();
+            if ($validationGroup === null || in_array($validationGroup, $rule->getValidationGroups(), true)) {
+                $fieldName = $rule->getFieldName();
 
-            $data = $this->getFieldData($fieldName);
+                $data = $this->getFieldData($fieldName);
 
-            foreach ($rule->getFilters() as $filter) {
-                $data = call_user_func_array($filter, array($data, $getFieldDataCallback));
-            }
+                foreach ($rule->getFilters() as $filter) {
+                    $data = call_user_func_array($filter, array($data, $getFieldDataCallback));
+                }
 
-            $this->setFieldData($fieldName, $data);
+                $this->setFieldData($fieldName, $data);
 
-            foreach ($rule->getConstraints() as $constraint) {
-                $constraintResult = call_user_func_array($constraint, array($data, $getFieldDataCallback));
+                foreach ($rule->getConstraints() as $constraint) {
+                    $constraintResult = call_user_func_array($constraint, array($data, $getFieldDataCallback));
 
-                if ($constraintResult === false) {
-                    $result->addError($rule->getMessage(), $fieldName);
-                    break;
+                    if ($constraintResult === false) {
+                        $result->addError($rule->getMessage(), $fieldName);
+                        break;
+                    }
                 }
             }
         }

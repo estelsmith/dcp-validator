@@ -18,7 +18,7 @@ interface RuleInterface
 
     /**
      * @param callable $filter
-     * @return RuleInterface
+     * @return $this
      * @throws Exception\InvalidArgumentException
      */
     public function addFilter($filter);
@@ -30,7 +30,7 @@ interface RuleInterface
 
     /**
      * @param string $fieldName
-     * @return RuleInterface
+     * @return $this
      * @throws Exception\InvalidArgumentException
      */
     public function setFieldName($fieldName);
@@ -42,7 +42,7 @@ interface RuleInterface
 
     /**
      * @param string $message
-     * @return RuleInterface
+     * @return $this
      * @throws Exception\InvalidArgumentException
      */
     public function setMessage($message);
@@ -54,8 +54,20 @@ interface RuleInterface
 
     /**
      * @param callable $constraint
-     * @return RuleInterface
+     * @return $this
      * @throws Exception\InvalidArgumentException
      */
     public function addConstraint($constraint);
+
+    /**
+     * @return mixed
+     */
+    public function getValidationGroups();
+
+    /**
+     * @param string $validationGroup
+     * @return $this
+     * @throws Exception\InvalidArgumentException
+     */
+    public function addValidationGroup($validationGroup);
 }
