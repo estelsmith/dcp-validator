@@ -197,13 +197,13 @@ class ValidatorSpec extends ObjectBehavior
                 (new Rule())
                     ->setFieldName('good_reference')
                     ->setMessage('good_reference_error')
-                    ->addConstraint(Constraints::matchesValue(new FieldReference('reference_field')))
+                    ->addConstraint(Constraints::mustMatch(new FieldReference('reference_field')))
             )
             ->add(
                 (new Rule())
                     ->setFieldName('bad_reference')
                     ->setMessage('bad_reference_error')
-                    ->addConstraint(Constraints::matchesValue(new FieldReference('reference_field')))
+                    ->addConstraint(Constraints::mustMatch(new FieldReference('reference_field')))
             )
         ;
 
@@ -275,13 +275,13 @@ class ValidatorSpec extends ObjectBehavior
                 (new Rule())
                     ->setFieldName('goodReference')
                     ->setMessage('good_reference_error')
-                    ->addConstraint(Constraints::matchesValue(new FieldReference('referenceField')))
+                    ->addConstraint(Constraints::mustMatch(new FieldReference('referenceField')))
             )
             ->add(
                 (new Rule())
                     ->setFieldName('badReference')
                     ->setMessage('bad_reference_error')
-                    ->addConstraint(Constraints::matchesValue(new FieldReference('referenceField')))
+                    ->addConstraint(Constraints::mustMatch(new FieldReference('referenceField')))
             )
         ;
 

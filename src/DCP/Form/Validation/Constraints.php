@@ -110,18 +110,18 @@ class Constraints
     /**
      * Returns a callback constraint indicating that a field must contain the provided value.
      *
-     * @param mixed $value
+     * @param mixed $constraint
      * @return callable
      */
-    public static function matchesValue($value)
+    public static function mustMatch($constraint)
     {
-        return function ($data, $formDataCallback) use ($value) {
-            if ($value instanceof FieldReference) {
-                $value = call_user_func_array($formDataCallback, array((string)$value));
+        return function ($data, $formDataCallback) use ($constraint) {
+            if ($constraint instanceof FieldReference) {
+                $constraint = call_user_func_array($formDataCallback, array((string)$constraint));
             }
 
             if (strlen($data) > 0) {
-                return $data === $value;
+                return $data === $constraint;
             }
         };
     }

@@ -142,9 +142,9 @@ class ConstraintsSpec extends ObjectBehavior
         }
     }
 
-    public function it_validates_matches_value_properly()
+    public function it_validates_must_match_properly()
     {
-        $constraint = $this->matchesValue('test');
+        $constraint = $this->mustMatch('test');
 
         $constraint->shouldBeAnInstanceOf(\Closure::class);
 
@@ -162,7 +162,7 @@ class ConstraintsSpec extends ObjectBehavior
         }
 
         // See if field references are being utilizes in the constraint.
-        $constraint = $this->matchesValue(new FieldReference('test_reference'));
+        $constraint = $this->mustMatch(new FieldReference('test_reference'));
 
         $testForm = [
             'test_reference' => 'test',
