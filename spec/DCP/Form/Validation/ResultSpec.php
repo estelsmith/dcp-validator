@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Dcp\Form\Validation;
+namespace spec\DCP\Form\Validation;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;

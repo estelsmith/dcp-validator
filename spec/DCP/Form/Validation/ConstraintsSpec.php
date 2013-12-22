@@ -169,7 +169,7 @@ class ConstraintsSpec extends ObjectBehavior
             'wrong_reference' => 'nooo'
         ];
 
-        $callback = function ($field) use($testForm) {
+        $callback = function ($field) use ($testForm) {
             return $testForm[$field];
         };
 
