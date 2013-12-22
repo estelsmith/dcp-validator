@@ -17,7 +17,7 @@ class ConstraintsSpec extends ObjectBehavior
     {
         $constraint = $this->notBlank();
 
-        $constraint->shouldBeAnInstanceOf(\Closure::class);
+        $constraint->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [null, false],
@@ -36,7 +36,7 @@ class ConstraintsSpec extends ObjectBehavior
     {
         $constraint = $this->formatEmail();
 
-        $constraint->shouldBeAnInstanceOf(\Closure::class);
+        $constraint->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [null, null],
@@ -60,7 +60,7 @@ class ConstraintsSpec extends ObjectBehavior
     {
         $constraint = $this->formatDigits();
 
-        $constraint->shouldBeAnInstanceOf(\Closure::class);
+        $constraint->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [null, null],
@@ -81,7 +81,7 @@ class ConstraintsSpec extends ObjectBehavior
     {
         $constraint = $this->formatNumeric();
 
-        $constraint->shouldBeAnInstanceOf(\Closure::class);
+        $constraint->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [null, null],
@@ -106,7 +106,7 @@ class ConstraintsSpec extends ObjectBehavior
     {
         $constraint = $this->formatRegex('/test/');
 
-        $constraint->shouldBeAnInstanceOf(\Closure::class);
+        $constraint->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [null, null],
@@ -127,7 +127,7 @@ class ConstraintsSpec extends ObjectBehavior
     {
         $constraint = $this->isBlank();
 
-        $constraint->shouldBeAnInstanceOf(\Closure::class);
+        $constraint->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [0, false],
@@ -146,7 +146,7 @@ class ConstraintsSpec extends ObjectBehavior
     {
         $constraint = $this->mustMatch('test');
 
-        $constraint->shouldBeAnInstanceOf(\Closure::class);
+        $constraint->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [null, null],

@@ -16,7 +16,7 @@ class FiltersSpec extends ObjectBehavior
     {
         $filter = $this->trim();
 
-        $filter->shouldBeAnInstanceOf(\Closure::class);
+        $filter->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [null, ''],
@@ -39,7 +39,7 @@ class FiltersSpec extends ObjectBehavior
     {
         $filter = $this->toLowerCase();
 
-        $filter->shouldBeAnInstanceOf(\Closure::class);
+        $filter->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [null, ''],
@@ -58,7 +58,7 @@ class FiltersSpec extends ObjectBehavior
     {
         $filter = $this->toUpperCase();
 
-        $filter->shouldBeAnInstanceOf(\Closure::class);
+        $filter->shouldBeAnInstanceOf('\Closure');
 
         $tests = [
             [null, ''],
