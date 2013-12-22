@@ -66,6 +66,11 @@ class Validator implements ValidatorInterface
         $result = new Result();
         $rules = $this->getRuleSet();
 
+        // Wrap getFieldData in a closure to expose the method to outside uses, since it's protected.
+        $getFieldDataCallback = function ($field) {
+            return $this->getFieldData($field);
+        };
+
         /** @var RuleInterface $rule */
         foreach ($rules as $rule) {
             $fieldName = $rule->getFieldName();
@@ -73,13 +78,13 @@ class Validator implements ValidatorInterface
             $data = $this->getFieldData($fieldName);
 
             foreach ($rule->getFilters() as $filter) {
-                $data = call_user_func_array($filter, array($data));
+                $data = call_user_func_array($filter, array($data, $getFieldDataCallback));
             }
 
             $this->setFieldData($fieldName, $data);
 
             foreach ($rule->getConstraints() as $constraint) {
-                $constraintResult = call_user_func_array($constraint, array($data));
+                $constraintResult = call_user_func_array($constraint, array($data, $getFieldDataCallback));
 
                 if ($constraintResult === false) {
                     $result->addError($rule->getMessage(), $fieldName);

@@ -2,6 +2,7 @@
 
 namespace spec\DCP\Form\Validation;
 
+use DCP\Form\Validation\FieldReference;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -157,7 +158,22 @@ class ConstraintsSpec extends ObjectBehavior
         ];
 
         foreach ($tests as $test) {
-            $constraint($test[0])->shouldReturn($test[1]);
+            $constraint($test[0], '')->shouldReturn($test[1]);
         }
+
+        // See if field references are being utilizes in the constraint.
+        $constraint = $this->matchesValue(new FieldReference('test_reference'));
+
+        $testForm = [
+            'test_reference' => 'test',
+            'wrong_reference' => 'nooo'
+        ];
+
+        $callback = function ($field) use($testForm) {
+            return $testForm[$field];
+        };
+
+        $constraint('test', $callback)->shouldReturn(true);
+        $constraint('nooo', $callback)->shouldReturn(false);
     }
 }

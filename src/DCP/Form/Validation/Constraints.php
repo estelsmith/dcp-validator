@@ -115,7 +115,11 @@ class Constraints
      */
     public static function matchesValue($value)
     {
-        return function ($data) use ($value) {
+        return function ($data, $formDataCallback) use ($value) {
+            if ($value instanceof FieldReference) {
+                $value = call_user_func_array($formDataCallback, array((string)$value));
+            }
+
             if (strlen($data) > 0) {
                 return $data === $value;
             }
