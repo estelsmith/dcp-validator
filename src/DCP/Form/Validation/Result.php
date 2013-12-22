@@ -37,9 +37,9 @@ class Result implements ResultInterface
     /**
      * {@inheritdoc}
      */
-    public function hasErrors()
+    public function isValid()
     {
-        return count($this->errors) > 0;
+        return count($this->errors) == 0;
     }
 
     /**

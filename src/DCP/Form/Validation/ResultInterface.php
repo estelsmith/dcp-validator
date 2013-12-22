@@ -21,11 +21,11 @@ interface ResultInterface
     public function addError($error, $field = '_form');
 
     /**
-     * Return TRUE if the form contains errors, FALSE otherwise.
+     * Return TRUE if the form passed validation, FALSE if there were errors.
      *
      * @return bool
      */
-    public function hasErrors();
+    public function isValid();
 
     /**
      * Returns an array of all form errors.

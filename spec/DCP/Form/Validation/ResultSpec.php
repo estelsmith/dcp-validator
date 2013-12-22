@@ -40,15 +40,15 @@ class ResultSpec extends ObjectBehavior
         $this->getErrors()->shouldBe($errors);
     }
 
-    public function it_does_not_have_errors_when_no_errors_have_been_added()
+    public function it_is_valid_when_no_errors_have_been_added()
     {
-        $this->hasErrors()->shouldBe(false);
+        $this->isValid()->shouldBe(true);
     }
 
-    public function it_has_errors_when_an_error_has_been_added()
+    public function it_is_not_valid_when_an_error_has_been_added()
     {
         $this->addError('error', 'field');
-        $this->hasErrors()->shouldBe(true);
+        $this->isValid()->shouldBe(false);
     }
 
     public function it_cannot_get_error_when_field_is_not_a_string()
