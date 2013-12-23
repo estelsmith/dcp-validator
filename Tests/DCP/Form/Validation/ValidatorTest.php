@@ -386,4 +386,42 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result->getError('page_2_field_1'));
         $this->assertEquals('page_2_field_2_error', $result->getError('page_2_field_2'));
     }
+
+    public function testAddRuleThrowsExceptionWhenRuleArgumentDoesNotImplementRuleInterface()
+    {
+        $gotException = false;
+        $expectedMessage = 'must implement interface DCP\Form\Validation\RuleInterface';
+        $actualMessage = null;
+
+        try {
+            $instance = new Validator();
+            $instance->addRule('not_a_rule');
+        } catch (\Exception $e) {
+            $gotException = true;
+            $actualMessage = $e->getMessage();
+        }
+
+        $this->assertTrue($gotException);
+        $this->assertContains($expectedMessage, $actualMessage);
+    }
+
+    public function testAddRuleAddsRuleToExistingRuleSet()
+    {
+        $expectedRules = [
+            $this->getMock('DCP\Form\Validation\RuleInterface'),
+            $this->getMock('DCP\Form\Validation\RuleInterface')
+        ];
+
+        $instance = new Validator();
+
+        foreach ($expectedRules as $rule) {
+            $instance->addRule($rule);
+        }
+
+        $actualRules = $instance->getRuleSet();
+
+        foreach ($actualRules as $index => $rule) {
+            $this->assertSame($expectedRules[$index], $rule);
+        }
+    }
 }

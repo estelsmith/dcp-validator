@@ -27,6 +27,14 @@ interface ValidatorInterface
     public function setRuleSet(RuleSetInterface $ruleSet);
 
     /**
+     * Add rule to the current rule set for the validator.
+     *
+     * @param RuleInterface $rule
+     * @return $this
+     */
+    public function addRule(RuleInterface $rule);
+
+    /**
      * Validate the form and return results of the validation.
      *
      * @param mixed $form

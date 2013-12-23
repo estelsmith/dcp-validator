@@ -18,6 +18,15 @@ class Validator implements ValidatorInterface
      */
     protected $ruleSet;
 
+    public function __construct(RuleSetInterface $ruleSet = null)
+    {
+        if (!$ruleSet) {
+            $ruleSet = new RuleSet();
+        }
+
+        $this->ruleSet = $ruleSet;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -32,6 +41,15 @@ class Validator implements ValidatorInterface
     public function setRuleSet(RuleSetInterface $ruleSet)
     {
         $this->ruleSet = $ruleSet;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addRule(RuleInterface $rule)
+    {
+        $this->ruleSet->add($rule);
         return $this;
     }
 
