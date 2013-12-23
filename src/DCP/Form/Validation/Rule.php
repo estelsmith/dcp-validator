@@ -26,6 +26,11 @@ class Rule implements RuleInterface
     /**
      * @var mixed
      */
+    protected $prerequisites = array();
+
+    /**
+     * @var mixed
+     */
     protected $filters = array();
 
     /**
@@ -37,6 +42,29 @@ class Rule implements RuleInterface
      * @var mixed
      */
     protected $validationGroups = array();
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPrerequisites()
+    {
+        return $this->prerequisites;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addPrerequisite($prerequisite)
+    {
+        if (!is_callable($prerequisite)) {
+            throw new Exception\InvalidArgumentException('prerequisite must be callable');
+        }
+
+        $this->prerequisites[] = $prerequisite;
+
+        return $this;
+    }
 
     /**
      * {@inheritdoc}

@@ -5,6 +5,7 @@ namespace Tests\DCP\Form\Validation;
 use DCP\Form\Validation\Constraints;
 use DCP\Form\Validation\FieldReference;
 use DCP\Form\Validation\Filters;
+use DCP\Form\Validation\Prerequisites;
 use DCP\Form\Validation\Rule;
 use DCP\Form\Validation\RuleSet;
 use DCP\Form\Validation\Validator;
@@ -423,5 +424,74 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         foreach ($actualRules as $index => $rule) {
             $this->assertSame($expectedRules[$index], $rule);
         }
+    }
+
+    public function testValidateTestsPrerequisitesFromRuleSetWhenFormIsAnArray()
+    {
+        $form = [
+            'test_field' => '',
+            'another_field' => 'test_field must not be blank',
+            'yet_another_field' => ''
+        ];
+
+        $ruleSet = new RuleSet();
+        $ruleSet
+            ->add(
+                (new Rule())
+                    ->setFieldName('another_field')
+                    ->setMessage('another_field_error')
+                    ->addPrerequisite(Prerequisites::notBlank(new FieldReference('test_field')))
+                    ->addConstraint(Constraints::mustMatch('Some crazy random stuff.'))
+            )
+            ->add(
+                (new Rule())
+                    ->setFieldName('yet_another_field')
+                    ->setMessage('yet_another_field_error')
+                    ->addPrerequisite(Prerequisites::notBlank(new FieldReference('another_field')))
+                    ->addConstraint(Constraints::notBlank())
+            )
+        ;
+
+        $instance = new Validator();
+        $instance->setRuleSet($ruleSet);
+
+        $result = $instance->validate($form);
+
+        $this->assertFalse($result->fieldHasError('another_field'));
+        $this->assertEquals('yet_another_field_error', $result->getError('yet_another_field'));
+    }
+
+    public function testValidateTestsPrerequisitesFromRuleSetWhenFormIsAnObject()
+    {
+        $form = new TestForm();
+        $form->setTestField('');
+        $form->setAnotherField('testField must not be blank');
+        $form->setYetAnotherField('');
+
+        $ruleSet = new RuleSet();
+        $ruleSet
+            ->add(
+                (new Rule())
+                    ->setFieldName('anotherField')
+                    ->setMessage('another_field_error')
+                    ->addPrerequisite(Prerequisites::notBlank(new FieldReference('testField')))
+                    ->addConstraint(Constraints::mustMatch('Some crazy random stuff.'))
+            )
+            ->add(
+                (new Rule())
+                    ->setFieldName('yetAnotherField')
+                    ->setMessage('yet_another_field_error')
+                    ->addPrerequisite(Prerequisites::notBlank(new FieldReference('anotherField')))
+                    ->addConstraint(Constraints::notBlank())
+            )
+        ;
+
+        $instance = new Validator();
+        $instance->setRuleSet($ruleSet);
+
+        $result = $instance->validate($form);
+
+        $this->assertFalse($result->fieldHasError('anotherField'));
+        $this->assertEquals('yet_another_field_error', $result->getError('yetAnotherField'));
     }
 }

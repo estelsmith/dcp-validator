@@ -70,28 +70,21 @@ class Validator implements ValidatorInterface
             return $this->getFieldData($form, $field);
         };
 
-        /** @var RuleInterface $rule */
         if ($rules) {
+            /** @var RuleInterface $rule */
             foreach ($rules as $rule) {
                 if ($validationGroup === null || in_array($validationGroup, $rule->getValidationGroups(), true)) {
                     $fieldName = $rule->getFieldName();
 
                     $data = $this->getFieldData($form, $fieldName);
 
-                    foreach ($rule->getFilters() as $filter) {
-                        $data = call_user_func_array($filter, array($data, $getFieldDataCallback));
+                    $this->processFilters($form, $rule, $data, $getFieldDataCallback);
+
+                    if (!$this->processPrerequisites($rule, $data, $getFieldDataCallback)) {
+                        continue;
                     }
 
-                    $this->setFieldData($form, $fieldName, $data);
-
-                    foreach ($rule->getConstraints() as $constraint) {
-                        $constraintResult = call_user_func_array($constraint, array($data, $getFieldDataCallback));
-
-                        if ($constraintResult === false) {
-                            $result->addError($rule->getMessage(), $fieldName);
-                            break;
-                        }
-                    }
+                    $this->processConstraints($result, $rule, $data, $getFieldDataCallback);
                 }
             }
         }
@@ -110,9 +103,9 @@ class Validator implements ValidatorInterface
         $data = null;
 
         if ($form) {
-            $getter = 'get' . ucfirst($fieldName);
-
             if (is_object($form)) {
+                $getter = 'get' . ucfirst($fieldName);
+
                 if (!method_exists($form, $getter)) {
                     throw new Exception\DomainException(sprintf('Form method %s does not exist', $getter));
                 }
@@ -137,9 +130,9 @@ class Validator implements ValidatorInterface
     protected function setFieldData(&$form, $fieldName, $data)
     {
         if ($form) {
-            $setter = 'set' . ucfirst($fieldName);
-
             if (is_object($form)) {
+                $setter = 'set' . ucfirst($fieldName);
+
                 if (!method_exists($form, $setter)) {
                     throw new Exception\DomainException(sprintf('Form method %s does not exist', $setter));
                 }
@@ -147,6 +140,60 @@ class Validator implements ValidatorInterface
                 call_user_func_array(array($form, $setter), array($data));
             } else {
                 $form[$fieldName] = $data;
+            }
+        }
+    }
+
+    /**
+     * @param RuleInterface $rule
+     * @param $data
+     * @param $getFieldDataCallback
+     * @return bool
+     */
+    protected function processPrerequisites(RuleInterface $rule, $data, $getFieldDataCallback)
+    {
+        $returnValue = true;
+
+        foreach ($rule->getPrerequisites() as $prerequisite) {
+            $returnValue = call_user_func_array($prerequisite, array($data, $getFieldDataCallback));
+
+            if (!$returnValue) {
+                break;
+            }
+        }
+
+        return (bool)$returnValue;
+    }
+
+    /**
+     * @param $form
+     * @param RuleInterface $rule
+     * @param $data
+     * @param $getFieldDataCallback
+     */
+    protected function processFilters(&$form, RuleInterface $rule, $data, $getFieldDataCallback)
+    {
+        foreach ($rule->getFilters() as $filter) {
+            $data = call_user_func_array($filter, array($data, $getFieldDataCallback));
+        }
+
+        $this->setFieldData($form, $rule->getFieldName(), $data);
+    }
+
+    /**
+     * @param ResultInterface $result
+     * @param RuleInterface $rule
+     * @param $data
+     * @param $getFieldDataCallback
+     */
+    protected function processConstraints(ResultInterface $result, RuleInterface $rule, $data, $getFieldDataCallback)
+    {
+        foreach ($rule->getConstraints() as $constraint) {
+            $constraintResult = call_user_func_array($constraint, array($data, $getFieldDataCallback));
+
+            if ($constraintResult === false) {
+                $result->addError($rule->getMessage(), $rule->getFieldName());
+                break;
             }
         }
     }

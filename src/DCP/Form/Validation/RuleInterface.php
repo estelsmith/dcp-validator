@@ -14,6 +14,17 @@ interface RuleInterface
     /**
      * @return mixed
      */
+    public function getPrerequisites();
+
+    /**
+     * @param callable $prerequisite
+     * @return $this
+     */
+    public function addPrerequisite($prerequisite);
+
+    /**
+     * @return mixed
+     */
     public function getFilters();
 
     /**

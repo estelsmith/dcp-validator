@@ -192,10 +192,48 @@ class RuleTest extends \PHPUnit_Framework_TestCase
             $instance->addValidationGroup($validationGroup);
         }
 
-        $actualValidationGroups = $instance->getConstraints();
+        $actualValidationGroups = $instance->getValidationGroups();
 
         foreach ($actualValidationGroups as $index => $validationGroup) {
             $this->assertSame($expectedValidationGroups[$index], $validationGroup);
+        }
+    }
+
+    public function testAddPrerequisiteThrowsExceptionWhenPrerequisiteArgumentIsNotCallable()
+    {
+        $gotException = false;
+        $expectedMessage = 'prerequisite must be callable';
+        $actualMessage = null;
+
+        try {
+            $instance = new Rule();
+            $instance->addPrerequisite('not_callable');
+        } catch (Exception\InvalidArgumentException $e) {
+            $gotException = true;
+            $actualMessage = $e->getMessage();
+        }
+
+        $this->assertTrue($gotException);
+        $this->assertEquals($expectedMessage, $actualMessage);
+    }
+
+    public function testCanAddAndGetPrerequisites()
+    {
+        $expectedPrerequisites = [
+            function () { return true; },
+            function () { return false; }
+        ];
+
+        $instance = new Rule();
+
+        foreach ($expectedPrerequisites as $prerequisite) {
+            $instance->addPrerequisite($prerequisite);
+        }
+
+        $actualPrerequisites = $instance->getPrerequisites();
+
+        foreach ($actualPrerequisites as $index => $prerequisite) {
+            $this->assertSame($expectedPrerequisites[$index], $prerequisite);
         }
     }
 }

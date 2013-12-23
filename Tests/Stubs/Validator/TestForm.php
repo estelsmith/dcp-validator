@@ -8,6 +8,8 @@ class TestForm
 
     protected $anotherField;
 
+    protected $yetAnotherField;
+
     protected $referenceField;
 
     protected $goodReference;
@@ -34,6 +36,16 @@ class TestForm
     public function getAnotherField()
     {
         return $this->anotherField;
+    }
+
+    public function setYetAnotherField($yetAnotherField)
+    {
+        $this->yetAnotherField = $yetAnotherField;
+    }
+
+    public function getYetAnotherField()
+    {
+        return $this->yetAnotherField;
     }
 
     public function setReferenceField($referenceField)
