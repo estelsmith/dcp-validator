@@ -35,8 +35,6 @@ use DCP\Form\Validation\Validator;
 $validator = new Validator();
 ```
 
-Simple, huh?
-
 ### Adding Rules
 Once the validator has been created, you may want to add validation rules so the validator is able to do some work.
 ```php
