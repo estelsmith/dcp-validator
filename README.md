@@ -4,6 +4,7 @@ DCP-Validator provides a simple API for data and form validation.
 Design goals for the project are always to be very concise, simple, extensible, and testable.
 
 [![Build Status](https://travis-ci.org/estelsmith/dcp-validator.png?branch=master)](https://travis-ci.org/estelsmith/dcp-validator)
+[![Coverage Status](https://coveralls.io/repos/estelsmith/dcp-validator/badge.png)](https://coveralls.io/r/estelsmith/dcp-validator)
 
 ## Getting Started
 The first item on the list is installing the package into your application.

@@ -7,5 +7,9 @@ install:
   - phpenv rehash
   - composer install
 script:
+  - mkdir -p build/logs
   - phpcs --standard=psr2 src
-  - bin/phpunit --coverage-text
+  - bin/phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+  - bin/coveralls
