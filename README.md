@@ -396,6 +396,51 @@ class MyConstraints extends Constraints
 
 Creating custom callbacks works for all callback-based systems such as constraints, filters, and prerequisites.
 
+### Validator Groups
+DCP-Validator allows partial form validation by way of validator groups. This is particularly useful when a form spans
+across multiple different pages.
+
+Setting a validation group on a rule is done by simply calling `Rule#addValidationGroup`.
+```php
+(new Rule())
+    ->setFieldName('username')
+    ->setMessage('Please enter a username')
+    ->addConstraint(Constraints::notBlank())
+    ->addValidationGroup('page_1')
+;
+```
+
+When validating a form, you can specify which validation group you wish to validate.
+```php
+$rules = (new RuleSet())
+    ->add(
+        (new Rule())
+            ->setFieldName('username')
+            ->setMessage('Please enter a username')
+            ->addConstraint(Constraints::notBlank())
+            ->addValidationGroup('page_1')
+    )
+    ->add(
+        (new Rule())
+            ->setFieldName('password')
+            ->setMessage('Please enter a password')
+            ->addConstraint(Constraints::notBlank())
+            ->addValidationGroup('page_2')
+    )
+;
+
+$form = [
+    'username' => '',
+    'password' => ''
+];
+
+$validator = new Validator();
+$validator->setRuleSet($rules);
+
+$validator->validate('page_2');
+// This will only validate the password field.
+```
+
 ## Contributing
 If you would like to contribute to DCP-Validator, you can do so in one of two ways:
 - Submit issues for bugs you find, or functionality that would improve the project.
