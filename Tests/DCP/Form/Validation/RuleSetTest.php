@@ -14,24 +14,6 @@ class RuleSetTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Iterator', $instance);
     }
 
-    public function testAddThrowsExceptionWhenRuleDoesNotImplementRuleInterface()
-    {
-        $gotException = false;
-        $expectedMessage = 'must be an instance of DCP\Form\Validation\RuleInterface';
-        $actualMessage = null;
-
-        try {
-            $instance = new RuleSet();
-            $instance->add('not a RuleInterface implementation');
-        } catch (\Exception $e) {
-            $gotException = true;
-            $actualMessage = $e->getMessage();
-        }
-
-        $this->assertTrue($gotException);
-        $this->assertContains($expectedMessage, $actualMessage);
-    }
-
     public function testCanAddAndIterateRules()
     {
         $rules = [

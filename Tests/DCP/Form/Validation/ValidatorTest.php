@@ -27,24 +27,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('DCP\Form\Validation\ValidatorInterface', $instance);
     }
 
-    public function testSetRuleSetThrowsExceptionWhenRuleSetArgumentDoesNotImplementRuleSetInterface()
-    {
-        $gotException = false;
-        $expectedMessage = 'must implement interface DCP\Form\Validation\RuleSetInterface';
-        $actualMessage = null;
-
-        try {
-            $instance = new Validator();
-            $instance->setRuleSet('not_a_ruleset');
-        } catch (\Exception $e) {
-            $gotException = true;
-            $actualMessage = $e->getMessage();
-        }
-
-        $this->assertTrue($gotException);
-        $this->assertContains($expectedMessage, $actualMessage);
-    }
-
     public function testCanSetAndGetRuleSet()
     {
         $expectedResult = $this->getMock('DCP\Form\Validation\RuleSetInterface');
@@ -386,24 +368,6 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result->getError('page_1_field_2'));
         $this->assertFalse($result->getError('page_2_field_1'));
         $this->assertEquals('page_2_field_2_error', $result->getError('page_2_field_2'));
-    }
-
-    public function testAddRuleThrowsExceptionWhenRuleArgumentDoesNotImplementRuleInterface()
-    {
-        $gotException = false;
-        $expectedMessage = 'must implement interface DCP\Form\Validation\RuleInterface';
-        $actualMessage = null;
-
-        try {
-            $instance = new Validator();
-            $instance->addRule('not_a_rule');
-        } catch (\Exception $e) {
-            $gotException = true;
-            $actualMessage = $e->getMessage();
-        }
-
-        $this->assertTrue($gotException);
-        $this->assertContains($expectedMessage, $actualMessage);
     }
 
     public function testAddRuleAddsRuleToExistingRuleSet()
