@@ -458,4 +458,48 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result->fieldHasError('anotherField'));
         $this->assertEquals('yet_another_field_error', $result->getError('yetAnotherField'));
     }
+
+    public function testValidateStopsEvaluatingFieldRulesWhenErrorExists()
+    {
+        $form = [
+            'test1' => null,
+            'test2' => null
+        ];
+
+        $ruleSet = new RuleSet();
+        $ruleSet
+            ->add(
+                (new Rule())
+                ->setFieldName('test1')
+                ->setMessage('error1')
+                ->addConstraint(function () { return false; })
+            )
+            ->add(
+                (new Rule())
+                    ->setFieldName('test1')
+                    ->setMessage('error2')
+                    ->addConstraint(function () { return false; })
+            )
+            ->add(
+                (new Rule())
+                    ->setFieldName('test2')
+                    ->setMessage('error1')
+                    ->addConstraint(function () { return false; })
+            )
+            ->add(
+                (new Rule())
+                    ->setFieldName('test2')
+                    ->setMessage('error2')
+                    ->addConstraint(function () { return false; })
+            )
+        ;
+
+        $instance = new Validator();
+        $instance->setRuleSet($ruleSet);
+
+        $result = $instance->validate($form);
+
+        $this->assertEquals('error1', $result->getError('test1'));
+        $this->assertEquals('error1', $result->getError('test2'));
+    }
 }

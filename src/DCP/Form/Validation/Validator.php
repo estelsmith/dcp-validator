@@ -73,9 +73,9 @@ class Validator implements ValidatorInterface
         if ($rules) {
             /** @var RuleInterface $rule */
             foreach ($rules as $rule) {
-                if ($validationGroup === null || in_array($validationGroup, $rule->getValidationGroups(), true)) {
-                    $fieldName = $rule->getFieldName();
+                $fieldName = $rule->getFieldName();
 
+                if ($this->ruleIsInValidationGroup($validationGroup, $rule) && !$result->fieldHasError($fieldName)) {
                     $data = $this->getFieldData($form, $fieldName);
 
                     $this->processFilters($form, $rule, $data, $getFieldDataCallback);
@@ -90,6 +90,16 @@ class Validator implements ValidatorInterface
         }
 
         return $result;
+    }
+
+    /**
+     * @param string|null $validationGroup
+     * @param RuleInterface $rule
+     * @return bool
+     */
+    protected function ruleIsInValidationGroup($validationGroup, RuleInterface $rule)
+    {
+        return $validationGroup === null || in_array($validationGroup, $rule->getValidationGroups(), true);
     }
 
     /**
